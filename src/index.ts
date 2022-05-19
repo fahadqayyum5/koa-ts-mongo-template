@@ -13,6 +13,8 @@ import cors from "@koa/cors";
 import dotenv from "dotenv";
 dotenv.config();
 
+import colors from "colors";
+
 const app = new Koa();
 //Database Connection...
 import { connectDatabase } from "./storage/mongodb/config/connectToDatabase";
@@ -57,6 +59,6 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${port}!`
+    `Server running in ${process.env.NODE_ENV} mode on port ${port}!`.green.bold
   );
 });

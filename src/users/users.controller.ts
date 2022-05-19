@@ -1,11 +1,17 @@
-const { User } = require("../storage/mongodb/models/User.model");
+import { User } from "../storage/mongodb/models/User.model";
+
 import { IUserAttrs } from "../storage/mongodb/interfaces/interface.common";
 import Koa from "koa";
+import { validateUser } from "./users.service";
 
 //Create User
 const createUser = async (ctx: Koa.DefaultContext, next: Koa.Next) => {
   console.log("Create User Called");
+  const { error } = validateUser(ctx.request.body);
 
+  if (error) {
+    ctx.throw(400, error.details[0].message.replace(/['"]+/g, ""));
+  }
   const { name, age, address } = ctx.request.body as IUserAttrs;
 
   const user = await User.findOne({ name: name });
@@ -52,11 +58,18 @@ const getUser = async (ctx: Koa.DefaultContext, next: Koa.Next) => {
 //Update User
 const updateUser = async (ctx: Koa.DefaultContext, next: Koa.Next) => {
   const userId = ctx.params.id as string;
+
   const user = await User.findOne({ _id: userId });
   if (!user) {
     ctx.status = 404;
     ctx.body = { success: false, error: "User Not Found" };
     return;
+  }
+
+  const { error } = validateUser(ctx.request.body);
+
+  if (error) {
+    ctx.throw(400, error.details[0].message.replace(/['"]+/g, ""));
   }
   //extract body
   const { name, age, address } = ctx.request.body as IUserAttrs;

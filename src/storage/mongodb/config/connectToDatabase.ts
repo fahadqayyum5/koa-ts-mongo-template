@@ -1,5 +1,6 @@
 import mongoose, { ConnectOptions } from "mongoose";
-// import chalk from "chalk";
+import chalk from "chalk";
+import colors from "colors";
 
 import { config } from "./config";
 
@@ -15,8 +16,7 @@ async function connectDatabase() {
     } as ConnectOptions);
     if (conn) {
       console.log(
-        // chalk.bold.greenBright
-        `Connected To The ${conn.connection.host}`
+        colors.green.bold(`Connected To The ${conn.connection.host}`)
       );
     }
   } catch (error: any) {
